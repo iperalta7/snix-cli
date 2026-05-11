@@ -25,6 +25,7 @@ func rootCmd() *cobra.Command {
 		validateCmd(),
 		startCmd(),
 		stopCmd(),
+		restartCmd(),
 	)
 	return root
 }
@@ -111,6 +112,29 @@ func stopCmd() *cobra.Command {
 			return err
 		}
 		fmt.Println("stopped")
+		return nil
+	}
+	return cmd
+}
+
+// ── restart ───────────────────────────────────────────────────────────────────
+
+func restartCmd() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "restart",
+		Short: "Restart the game server",
+	}
+	configPath := addConfigFlag(cmd)
+	cmd.RunE = func(cmd *cobra.Command, args []string) error {
+		cfg, err := loadConfig(*configPath)
+		if err != nil {
+			return err
+		}
+		fmt.Printf("restarting %s...\n", cfg.Name)
+		if err := process.New().Restart(cfg.Service.Name); err != nil {
+			return err
+		}
+		fmt.Println("restarted")
 		return nil
 	}
 	return cmd
