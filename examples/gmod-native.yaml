@@ -1,0 +1,55 @@
+name: my-gmod-server
+game: gmod
+runtime: native
+
+native:
+  command: /home/steam/gmod/srcds_run
+  args:
+    - -game
+    - garrysmod
+    - -port
+    - "27015"
+    - +maxplayers
+    - "16"
+    - +map
+    - gm_flatgrass
+    - -console
+  working_dir: /home/steam/gmod
+  user: steam
+  session: gmod
+  session_type: screen
+  stop_command: "quit"
+  stop_timeout: 20
+
+service:
+  name: gmod
+
+console:
+  type: rcon
+  rcon:
+    address: "127.0.0.1:27015"
+    password: "changeme"
+
+backup:
+  dirs:
+    - garrysmod/addons
+    - garrysmod/data
+    - garrysmod/maps
+  files:
+    - garrysmod/cfg/server.cfg
+  archive_format: tar.gz
+  backend: local
+  local:
+    path: /mnt/backups/gmod
+    retention_days: 7
+
+update:
+  type: steamcmd
+  steamcmd:
+    app_id: 4020
+    install_dir: /home/steam/gmod
+    validate: false
+
+ports:
+  - { name: game,  port: 27015, protocol: udp }
+  - { name: rcon,  port: 27015, protocol: tcp }

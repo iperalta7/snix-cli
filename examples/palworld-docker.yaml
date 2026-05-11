@@ -1,0 +1,51 @@
+name: my-palworld-server
+game: palworld
+runtime: docker
+
+docker:
+  image: thijsvanloef/palworld-server-docker:latest
+  container_name: palworld
+  volumes:
+    - /mnt/data/palworld:/palworld
+  env:
+    PUID: "1000"
+    PGID: "1000"
+    PORT: "8211"
+    PLAYERS: "16"
+    SERVER_PASSWORD: "worldofpals"
+    MULTITHREADING: "true"
+    COMMUNITY: "false"
+    SERVER_NAME: "My Palworld Server"
+    ADMIN_PASSWORD: "adminpassword"
+    RCON_ENABLED: "true"
+    RCON_PORT: "25575"
+  stop_timeout: 30
+
+service:
+  name: palworld
+
+console:
+  type: rcon
+  rcon:
+    address: "127.0.0.1:25575"
+    password: "adminpassword"
+
+backup:
+  flush_command: "save"
+  flush_wait: 5
+  dirs:
+    - Pal/Saved
+  archive_format: tar.gz
+  backend: local
+  local:
+    path: /mnt/backups/palworld
+    retention_days: 14
+
+update:
+  type: image
+  image:
+    prune: true
+
+ports:
+  - { name: game, port: 8211,  protocol: udp }
+  - { name: rcon, port: 25575, protocol: tcp }
