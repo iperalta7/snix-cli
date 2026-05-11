@@ -1,0 +1,55 @@
+name: my-valheim-server
+game: valheim
+runtime: native
+
+native:
+  command: /home/steam/valheim/valheim_server.x86_64
+  args:
+    - -name
+    - "My Valheim Server"
+    - -port
+    - "2456"
+    - -world
+    - "Dedicated"
+    - -password
+    - "secret"
+    - -nographics
+    - -batchmode
+  working_dir: /home/steam/valheim
+  user: steam
+  session: valheim
+  session_type: screen
+  stop_command: "quit"
+  stop_timeout: 30
+
+service:
+  name: valheim
+
+console:
+  type: session
+
+backup:
+  flush_command: "save"
+  flush_wait: 5
+  dirs:
+    - saves/worlds
+  files:
+    - adminlist.txt
+    - bannedlist.txt
+    - permittedlist.txt
+  archive_format: tar.gz
+  backend: local
+  local:
+    path: /mnt/backups/valheim
+    retention_days: 7
+
+update:
+  type: steamcmd
+  steamcmd:
+    app_id: 896660
+    install_dir: /home/steam/valheim
+    validate: true
+
+ports:
+  - { name: game,  port: 2456, protocol: udp }
+  - { name: query, port: 2457, protocol: udp }

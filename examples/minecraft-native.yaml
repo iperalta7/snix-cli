@@ -1,0 +1,55 @@
+name: my-minecraft-server
+game: minecraft
+runtime: native
+
+native:
+  command: /usr/bin/java
+  args:
+    - -Xms4G
+    - -Xmx8G
+    - -XX:+UseG1GC
+    - -jar
+    - /mnt/minecraft/server/server.jar
+    - nogui
+  working_dir: /mnt/minecraft/server
+  user: minecraft
+  session: minecraft
+  session_type: screen
+  stop_command: "stop"
+  stop_timeout: 60
+
+service:
+  name: minecraft
+
+console:
+  type: session
+
+backup:
+  flush_command: "save-all"
+  flush_wait: 5
+  dirs:
+    - world
+    - world_nether
+    - world_the_end
+  files:
+    - server.properties
+    - ops.json
+    - whitelist.json
+    - banned-players.json
+    - banned-ips.json
+  archive_format: tar.gz
+  backend: oci
+  oci:
+    bucket_name: mc-backups
+    namespace: mynamespace
+    region: us-phoenix-1
+    object_prefix: worlds/
+    auth_method: instance_principal
+
+update:
+  type: script
+  script:
+    path: /usr/local/bin/update-minecraft.sh
+
+ports:
+  - { name: game, port: 25565, protocol: tcp }
