@@ -12,13 +12,13 @@ type Config struct {
 	Game    string `yaml:"game"`
 	Runtime string `yaml:"runtime"` // native | docker
 
-	Native  *NativeConfig  `yaml:"native,omitempty"`
-	Docker  *DockerConfig  `yaml:"docker,omitempty"`
-	Console ConsoleConfig  `yaml:"console"`
-	Service ServiceConfig  `yaml:"service"`
-	Backup  *BackupConfig  `yaml:"backup,omitempty"`
-	Update  *UpdateConfig  `yaml:"update,omitempty"`
-	Ports   []PortConfig   `yaml:"ports,omitempty"`
+	Native  *NativeConfig `yaml:"native,omitempty"`
+	Docker  *DockerConfig `yaml:"docker,omitempty"`
+	Console ConsoleConfig `yaml:"console"`
+	Service ServiceConfig `yaml:"service"`
+	Backup  *BackupConfig `yaml:"backup,omitempty"`
+	Update  *UpdateConfig `yaml:"update,omitempty"`
+	Ports   []PortConfig  `yaml:"ports,omitempty"`
 }
 
 // ── Native runtime ────────────────────────────────────────────────────────────
