@@ -49,8 +49,9 @@ func addConfigFlag(cmd *cobra.Command) *string {
 
 func validateCmd() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "validate",
-		Short: "Validate a server config file",
+		Use:          "validate",
+		Short:        "Validate a server config file",
+		SilenceUsage: true,
 	}
 	configPath := addConfigFlag(cmd)
 	cmd.RunE = func(cmd *cobra.Command, args []string) error {
@@ -59,8 +60,7 @@ func validateCmd() *cobra.Command {
 			return err
 		}
 		if err := cfg.Validate(); err != nil {
-			fmt.Fprintln(os.Stderr, err)
-			os.Exit(1)
+			return err
 		}
 		fmt.Printf("config valid: %s", cfg.Name)
 		if cfg.Game != "" {
