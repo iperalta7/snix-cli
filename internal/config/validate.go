@@ -49,7 +49,7 @@ func (c *Config) Validate() error {
 			add("console.rcon.address is required when console.type is rcon")
 		}
 		if c.Console.RCON.Password == "" {
-			add("console.rcon.password is required when console.type is rcon")
+			add("console.rcon.password or console.rcon.password_env is required when console.type is rcon")
 		}
 	case "session":
 		if c.Runtime == "docker" {
