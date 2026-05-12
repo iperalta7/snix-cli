@@ -2,8 +2,11 @@ package config
 
 import (
 	"fmt"
+	"regexp"
 	"strings"
 )
+
+var validServiceName = regexp.MustCompile(`^[a-zA-Z0-9@._-]+$`)
 
 // Validate checks all required fields and cross-field constraints.
 // Collects all errors rather than failing on the first.
@@ -35,6 +38,8 @@ func (c *Config) Validate() error {
 	// ── Service ───────────────────────────────────────────────────────────────
 	if c.Service.Name == "" {
 		add("service.name is required")
+	} else if !validServiceName.MatchString(c.Service.Name) {
+		add("service.name %q contains invalid characters (allowed: a-z A-Z 0-9 @ . _ -)", c.Service.Name)
 	}
 
 	// ── Console ───────────────────────────────────────────────────────────────
