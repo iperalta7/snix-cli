@@ -52,8 +52,9 @@ type ConsoleConfig struct {
 }
 
 type RCONConfig struct {
-	Address  string `yaml:"address"`
-	Password string `yaml:"password"`
+	Address     string `yaml:"address"`
+	Password    string `yaml:"password"`
+	PasswordEnv string `yaml:"password_env"`
 }
 
 // ── Service ───────────────────────────────────────────────────────────────────
@@ -143,6 +144,13 @@ func Load(path string) (*Config, error) {
 	var cfg Config
 	if err := yaml.Unmarshal(data, &cfg); err != nil {
 		return nil, fmt.Errorf("parsing config: %w", err)
+	}
+	if cfg.Console.RCON.PasswordEnv != "" {
+		val := os.Getenv(cfg.Console.RCON.PasswordEnv)
+		if val == "" {
+			return nil, fmt.Errorf("env var %q (console.rcon.password_env) is not set or empty", cfg.Console.RCON.PasswordEnv)
+		}
+		cfg.Console.RCON.Password = val
 	}
 	return &cfg, nil
 }
