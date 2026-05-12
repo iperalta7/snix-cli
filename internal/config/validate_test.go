@@ -32,7 +32,7 @@ func validDockerConfig() *Config {
 		Service: ServiceConfig{Name: "test"},
 		Console: ConsoleConfig{
 			Type: "rcon",
-			RCON: RCONConfig{Address: "localhost:25575"},
+			RCON: RCONConfig{Address: "localhost:25575", Password: "secret"},
 		},
 	}
 }
